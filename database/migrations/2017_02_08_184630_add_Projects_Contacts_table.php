@@ -14,8 +14,11 @@ class AddProjectsContactsTable extends Migration
     public function up()
     {
         Schema::create('ProjectContacts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->increments('projectContactId');
+            $table->integer('projectId')->unsigned();
+            $table->integer('contactId')->unsigned();
+            $table->foreign('projectId')->references('projectId')->on('Projects');
+            $table->foreign('contactId')->references('contactId')->on('Contacts');
         });
     }
 

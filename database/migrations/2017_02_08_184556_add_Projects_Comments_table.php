@@ -14,8 +14,10 @@ class AddProjectsCommentsTable extends Migration
     public function up()
     {
         Schema::create('ProjectComments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->increments('commentId');
+            $table->integer('projectId')->unsigned();
+            $table->String('comment');
+            $table->foreign('projectId')->references('projectId')->on('Projects');
         });
     }
 

@@ -14,8 +14,12 @@ class AddProjectsFileAttachmentsTable extends Migration
     public function up()
     {
         Schema::create('ProjectFileAttachments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->increments('fileId');
+            $table->integer('projectId')->unsigned();
+            $table->String('fileDescription');
+            $table->String('fileName');
+            $table->String('fileLocation');
+            $table->foreign('projectId')->references('projectId')->on('Projects');
         });
     }
 
