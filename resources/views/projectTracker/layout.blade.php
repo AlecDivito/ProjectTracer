@@ -8,7 +8,15 @@
 <body>
 
 <div class="content container">
-  <form method="post" >
+<!--
+  Here we need at add a js function so that on submit
+  we decide if we are moving to a new proj
+  or
+  we are saving, deleteing, or creating a new project
+
+  (for right now we will be creating a new project)
+-->
+  <form method="post" action="">
     <div class="buttons">
       <div class="pull-left">
         <input type="submit" name="moveFirst" value="<|">
