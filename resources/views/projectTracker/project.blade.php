@@ -1,30 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Project Page</title>
-  <link rel="stylesheet" href="../css/app.css">
-</head>
-<body>
+@extends('projectTracker.layout')
 
-<div class="content container">
-  <form method="post" >
-    <div class="buttons">
-      <div class="pull-left">
-        <input type="submit" name="back2" value="<|">
-        <input type="submit" name="back1" value="<">
-        <input type="submit" name="forward1" value=">">
-        <input type="submit" name="forward2" value="|>">
-      </div>
-      <div class="pull-right">
-        <input type="submit" name="new" value="Add New">
-        <input type="submit" name="save" value="Save Changes">
-        <input type="submit" name="delete" value="Delete">
-      </div>
-      <div class="clearfix"></div>
-    </div>
-
-    <p>Record # of #</p>
-
+@section('content')
     <div class="inputs">
       <ul class="pull-left">
         <li><label for="projId">Project ID:<input type="text" name="projId" id="projId"></label></li>
@@ -76,15 +52,10 @@
         </div>
       </div>
     </div>
-  </form>
 
   <div class="pull-right">
     <input type="button" value="Show Unclosed">
     <input type="button" value="Show All">
   </div>
 
-</div>
-
-<script src="../js/app.js"></script>
-</body>
-</html>
+@stop
