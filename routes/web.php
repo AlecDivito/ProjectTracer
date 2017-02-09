@@ -18,3 +18,7 @@ Route::get('/', function () {
 Route::get('/project', function () {
   return view('projectTracker.project');
 });
+
+Route::get('/contact', function () {
+  return view('projectTracker.contact');
+});
