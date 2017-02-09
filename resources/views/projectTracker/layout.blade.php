@@ -11,10 +11,10 @@
   <form method="post" >
     <div class="buttons">
       <div class="pull-left">
-        <input type="submit" name="back2" value="<|">
-        <input type="submit" name="back1" value="<">
-        <input type="submit" name="forward1" value=">">
-        <input type="submit" name="forward2" value="|>">
+        <input type="submit" name="moveFirst" value="<|">
+        <input type="submit" name="movePrevious" value="<">
+        <input type="submit" name="moveNext" value=">">
+        <input type="submit" name="moveLast" value="|>">
       </div>
       <div class="pull-right">
         <input type="submit" name="new" value="Add New">

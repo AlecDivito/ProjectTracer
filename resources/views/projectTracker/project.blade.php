@@ -6,7 +6,13 @@
         <li><label for="projId">Project ID:<input type="text" name="projId" id="projId"></label></li>
         <li><label for="projTitle">Project Title:<input type="text" name="projTitle" id="projTitle"></label></li>
         <li><label for="">Project Description:<textarea></textarea></label></li>
-        <li><label for="priority">Priority<input type="text" name="priority" id="priority"></label></li>
+        <li>
+          <label for="priority">Priority
+            <select name="priority" id="priority">
+              <option value="temp">temp</option>
+            </select>
+          </label>
+        </li>
       </ul>
       <ul class="pull-right">
         <li><label for="referenceNum">Reference/Matter #:<input type="text" name="referenceNum" id="referenceNum"></label></li>
@@ -15,7 +21,13 @@
         <li><label for="budgetHours">Hours Budget:<input type="text" name="budgetHours" id="budgetHours"></label></li>
         <li><label for="hoursLeft">Hours to Date:<input type="text" name="hoursLeft" id="hoursLeft"></label></li>
         <li><label for="dueDate">Date Due:<input type="text" name="dueDate" id="dueDate"></label></li>
-        <li><label for="status">Status:<input type="text" name="status" id="status"></label></li>
+        <li>
+          <label for="status">Status:
+            <select name="status" id="status">
+              <option value="temp">temp</option>
+            </select>
+          </label>
+        </li>
       </ul>
       <div class="clearfix"></div>
     </div>
@@ -25,7 +37,10 @@
 
         <header>Comments/Tasks</header>
         <div id="tasks">
-          <label for="commentList">Comments / Tasks<textarea name="commentList" id="commentList" cols="30" rows="10"></textarea></label>
+          Comments / Tasks
+          <ul>
+            <!-- List of tasks and comments will go here -->
+          </ul>
           <input type="button" name="delComment" value="Delete Comment">
           <input type="button" name="addComment" value="Add Comment">
           <label for="comment">Comment / Taks Text:<input type="text" id="comment" name="comment"></label>
@@ -33,7 +48,10 @@
 
         <header>Contacts</header>
         <div id="contacts">
-          <label for="list">Related Contacts:<textarea name="list" id="list" cols="30" rows="10"></textarea></label>
+          Related Contacts:
+          <ul>
+            <!-- List of Related Contacts will go here -->
+          </ul>
           <input type="button" value="Email Selected Contact" name="">
           <input type="button" value="View Details for Selected Contact" name="">
           <input type="button" value="Add / Manage Contacts" name="">
@@ -42,7 +60,10 @@
 
         <header>File Attachments</header>
         <div id="files">
-          <label for="list55">Related File Attachments:<textarea name="list55" id="list55" cols="30" rows="10"></textarea></label>
+          Related File Attachments:
+          <ul>
+            <!-- List of Attached Files will go here -->
+          </ul>
           <input type="button" name="" value="Open Selected File">
           <input type="button" name="" value="Remove File Attachment">
           <input type="button" name="" value="Add File Attachment">
@@ -54,8 +75,8 @@
     </div>
 
   <div class="pull-right">
-    <input type="button" value="Show Unclosed">
-    <input type="button" value="Show All">
+    <input type="button" name="showUnclosed" value="Show Unclosed">
+    <input type="button" name="showAll" value="Show All">
   </div>
 
 @stop
