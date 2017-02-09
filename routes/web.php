@@ -15,10 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/project', function () {
-  return view('projectTracker.project');
-});
+Route::get('/project', 'BasicProjectController@project');
+Route::post('/project', 'BasicProjectController@saveProject');
 
-Route::get('/contact', function () {
-  return view('projectTracker.contact');
-});
+Route::get('/contact', 'BasicProjectController@contact');
+Route::post('/contact', 'BasicProjectController@saveContact');
