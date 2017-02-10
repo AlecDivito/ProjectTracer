@@ -23,6 +23,7 @@ Route::delete('/project/{project}', 'BasicProjectController@deleteProject');
 Route::post('/contact/new', 'BasicContactController@newContact');
 Route::get('/contact/{contact}', 'BasicContactController@contact');
 Route::post('/contact/{contact}', 'BasicContactController@saveContact');
+Route::delete('/contact/{contact}', 'BasicContactController@deleteContact');
 
 // Added authentication to the user
 Auth::routes();

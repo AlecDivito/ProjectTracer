@@ -39,4 +39,10 @@ class BasicContactController extends Controller
         $contact->save();
         return redirect("/contact/{$contact->contactId}");
     }
+
+    public function deleteContact(Request $request, Contact $contact)
+    {
+        $contact->delete();
+        return redirect('/home');
+    }
 }

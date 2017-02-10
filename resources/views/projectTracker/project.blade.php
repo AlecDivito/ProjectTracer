@@ -16,23 +16,19 @@
 
   (for right now we will be creating a new project)
 -->
-  <form method="post" action="/project/{$project->projectId}">
-    {{ csrf_field() }}
     <!--
       when submiting the form, need to check and find which submit button was pressed
       then change the _method to the approprite function
     -->
-    <input type="hidden" name="_method" value="post">
-    <div class="buttons">
-      <form method="post" action="idkyet">
-        {{ csrf_field() }}
-        <div class="pull-left">
+      <div class="pull-left">
+        <form method="post" action="idkyet">
+          {{ csrf_field() }}
           <input type="submit" name="moveFirst" value="<|"><!-- POST -->
           <input type="submit" name="movePrevious" value="<"><!-- POST -->
           <input type="submit" name="moveNext" value=">"><!-- POST -->
           <input type="submit" name="moveLast" value="|>"><!-- POST -->
-        </div>
-      </form>
+        </form>
+      </div>
 
       <div class="pull-right">
         <form action="new" method="post">
@@ -113,9 +109,12 @@
             </ul>
             <input type="button" style="float: right;" value="Email Selected Contact" name="">
             <input type="button" value="View Details for Selected Contact" name="">
-            <input type="button" value="Add / Manage Contacts" name="">
             <input type="button" value="Delete Selected Contact" name="">
           </div>
+        </form>
+        <form action="/contact/new" method="post">
+          {{csrf_field()}}
+          <input type="submit" value="Add / Manage Contacts" name="">
         </form>
     </div>
 
