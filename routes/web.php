@@ -17,6 +17,13 @@ Route::get('/', function () {
 
 Route::get('/project', 'BasicProjectController@project');
 Route::post('/project', 'BasicProjectController@saveProject');
+Route::put('/project', 'BasicProjectController@saveProject');
+Route::delete('/project', 'BasicProjectController@saveProject');
+
 
 Route::get('/contact', 'BasicProjectController@contact');
 Route::post('/contact', 'BasicProjectController@saveContact');
+
+// Added authentication to the user
+Auth::routes();
+Route::get('/home', 'HomeController@index');
