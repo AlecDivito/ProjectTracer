@@ -2,16 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Project;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class BasicProjectController extends Controller
 {
-    public function project(Request $request)
+    public function newProject()
     {
-        return view('projectTracker.project');
+        $project = new Project();
+        $project->userId = Auth::id();
+        $project->save();
+        return redirect("/project/{$project->projectId}");
     }
 
-    public function saveProject(Request $request)
+    public function project(Request $request, Project $project)
+    {
+        $array[] = $project->toArray();
+        return view('projectTracker.project', ['array'=>$array]);
+    }
+
+    public function saveProject(Request $request, Project $project)
     {
         return redirect('/project');
     }

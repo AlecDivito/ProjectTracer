@@ -8,7 +8,10 @@
                 <div class="panel-heading">Whats new</div>
 
                 <div class="panel-body">
-                    Create a New Project
+                    <form action="/project/new" method="post">
+                        {{ csrf_field() }}
+                        <input type="submit" value="Create A new Project" class="btn btn-success">
+                    </form>
                 </div>
             </div>
         </div>
@@ -21,6 +24,13 @@
 
                 <div class="panel-body">
                     You are logged in!
+                    <ul>
+                        @foreach($projects as $proj)
+                            <li>
+                                <a href="/project/{{$proj->projectId}}">{{$proj->projectTitle or 'title Not Found'}}</a>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
         </div>
