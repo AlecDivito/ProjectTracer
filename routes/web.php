@@ -15,8 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/project', 'BasicProjectController@project');
-Route::post('/project', 'BasicProjectController@saveProject');
+Route::post('/project/new', 'BasicProjectController@newProject');
+Route::get('/project/{project}', 'BasicProjectController@project');
+Route::post('/project/{project}', 'BasicProjectController@saveProject');
+Route::delete('/project/{project}', 'BasicProjectController@deleteProject');
 
-Route::get('/contact', 'BasicProjectController@contact');
-Route::post('/contact', 'BasicProjectController@saveContact');
+Route::post('/contact/new', 'BasicContactController@newContact');
+Route::get('/contact/{contact}', 'BasicContactController@contact');
+Route::post('/contact/{contact}', 'BasicContactController@saveContact');
+Route::delete('/contact/{contact}', 'BasicContactController@deleteContact');
+
+// Added authentication to the user
+Auth::routes();
+Route::get('/home', 'HomeController@index');
