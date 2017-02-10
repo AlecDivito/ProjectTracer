@@ -18,8 +18,7 @@ Route::get('/', function () {
 Route::post('/project/new', 'BasicProjectController@newProject');
 Route::get('/project/{project}', 'BasicProjectController@project');
 Route::post('/project/{project}', 'BasicProjectController@saveProject');
-Route::put('/project/{project}', 'BasicProjectController@saveProject');
-Route::delete('/project/{project}', 'BasicProjectController@saveProject');
+Route::delete('/project/{project}', 'BasicProjectController@deleteProject');
 
 Route::post('/contact/new', 'BasicContactController@newContact');
 Route::get('/contact/{contact}', 'BasicContactController@contact');

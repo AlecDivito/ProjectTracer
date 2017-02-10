@@ -37,4 +37,10 @@ class BasicProjectController extends Controller
         return redirect("/project/{$project->projectId}");
     }
 
+    public function deleteProject(Request $request, Project $project)
+    {
+        $project->delete();
+        return redirect('/home');
+    }
+
 }
