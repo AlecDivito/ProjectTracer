@@ -14,7 +14,8 @@ class AddContactsTable extends Migration
     public function up()
     {
         Schema::create('Contacts', function (Blueprint $table) {
-            $table->increments('contactId');    // Unique ID for contacts
+            $table->increments('contactId');    // Unique ID for contacts            $table->integer('userId')->unsigned();  // References the user table
+            $table->integer('userId')->unsigned();
             $table->String('lastName')->nullable();         // Field Size 50
             $table->String('firstName')->nullable();        // Field Size 50
             $table->String('middleName')->nullable();       // Field Size 50
@@ -27,7 +28,8 @@ class AddContactsTable extends Migration
             $table->String('workPhone')->nullable();        // Field Size 12
             $table->String('homePhone')->nullable();        // Field Size 12
             $table->String('cellPhone')->nullable();        // Field Size 12
-            $table->String('email')->nullable();            // Field Size 50
+            $table->String('email')->nullable();            // Field Size 50            $table->integer('userId')->unsigned();  // References the user table
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 
