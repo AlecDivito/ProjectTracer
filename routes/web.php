@@ -21,9 +21,9 @@ Route::post('/project/{project}', 'BasicProjectController@saveProject');
 Route::put('/project/{project}', 'BasicProjectController@saveProject');
 Route::delete('/project/{project}', 'BasicProjectController@saveProject');
 
-
-Route::get('/contact', 'BasicProjectController@contact');
-Route::post('/contact', 'BasicProjectController@saveContact');
+Route::post('/contact/new', 'BasicProjectController@newContact');
+Route::get('/contact/{contact}', 'BasicProjectController@contact');
+Route::post('/contact/{contact}', 'BasicProjectController@saveContact');
 
 // Added authentication to the user
 Auth::routes();
