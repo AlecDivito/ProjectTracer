@@ -15,6 +15,7 @@ class AddProjectsTable extends Migration
     {
         Schema::create('Projects', function (Blueprint $table) {
             $table->increments('projectId');        // UniqueID for the project
+            $table->integer('userId')->unsigned();  // References the user table
             $table->string('projectTitle');         // Field Size 25
             $table->string('projectDescription');   // Field Size 250
             $table->string('priority');             // Field Size 15
@@ -25,6 +26,7 @@ class AddProjectsTable extends Migration
             $table->integer('hoursToDate');          // Field Size Integer
             $table->dateTime('dateDue');
             $table->string('Status');               // Field Size 15
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 
