@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
@@ -18,5 +19,10 @@ class Contact extends Model
     public function projects()
     {
       return $this->belongsToMany('App\Project', 'ProjectContacts');
+    }
+
+    public function getContactIds($userId)
+    {
+        return DB::table('Contacts')->where('userId', $userId)->pluck('contactId');
     }
 }

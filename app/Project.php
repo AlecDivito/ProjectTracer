@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
@@ -28,5 +29,10 @@ class Project extends Model
     public function files()
     {
         $this->hasMany('App\File');
+    }
+
+    public function getProjectIds($userId)
+    {
+        return DB::table('Projects')->where('userId', $userId)->pluck('projectId');
     }
 }

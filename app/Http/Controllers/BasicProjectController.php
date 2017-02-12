@@ -18,7 +18,32 @@ class BasicProjectController extends Controller
 
     public function project(Request $request, Project $project)
     {
-        return view('projectTracker.project')->with('project', $project);
+        // Get all projects
+        $ids = $project->getProjectIds(Auth::id());
+        $values = [];
+        $values['count'] = count($ids) - 1; // 5
+        $values['first'] = $ids[0]; // 1
+        $values['last']  = $ids[$values['count']]; // 70
+        if ($ids[0] === $project->projectId) {
+            $values['next'] = $ids[1];
+            $values['pervious'] = $ids[0];
+            $values['currentCount'] = 0;
+
+        } elseif ($ids[$values['count']] === $project->projectId) {
+            $values['next'] = $ids[$values['count']];
+            $values['pervious'] = $ids[$values['count'] - 1];
+            $values['currentCount'] = $values['count'];
+        } else {
+            for ($i=1; $i < $values['count']; $i++) {
+                if ($project->projectId === $ids[$i]) {
+                    $values['next'] = $ids[$i + 1];
+                    $values['pervious'] = $ids[$i - 1];
+                    $values['currentCount'] = $i;
+                    break;
+                }
+            }
+        }
+        return view('projectTracker.project', ['project'=>$project, 'values'=>$values]);
     }
 
     public function saveProject(Request $request, Project $project)
