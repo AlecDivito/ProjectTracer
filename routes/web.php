@@ -25,6 +25,9 @@ Route::get('/contact/{contact}', 'BasicContactController@contact');
 Route::post('/contact/{contact}', 'BasicContactController@saveContact');
 Route::delete('/contact/{contact}', 'BasicContactController@deleteContact');
 
+Route::post('/comment/add', 'BasicCommentController@add');
+Route::delete('/comment/delete', 'BasicCommentController@delete');
+
 // Added authentication to the user
 Auth::routes();
 Route::get('/home', 'HomeController@index');

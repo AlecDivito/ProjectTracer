@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="csrf-token" content="{!! csrf_token() !!}">
   <title>Title</title>
   <link rel="stylesheet" href="../css/app.css">
   <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
@@ -84,25 +85,104 @@
     </ul>
 
     <div id="Comments" class="w3-container w3-border tab" style="display:block">
-        <form>
-          <div class="pull-left" style="width: 150px; background-color: red;">Comments / Tasks:</div>
-          <div class="pull-right" style="width: 650px;">
-            <ul style=" height: 400px; background-color: white;">
-              <li >List of tasks and comments will go here</li>
-            </ul>
-            <input type="button" name="delComment" value="Delete Comment">
-            <input type="button" name="addComment" value="Add Comment">
-            <label for="comment">Comment / Taks Text:<input type="text" id="comment" name="comment"></label>
-          </div>
-        </form>
+      <div class="pull-left" style="width: 150px; background-color: red;">Comments / Tasks:</div>
+      <div class="pull-right" style="width: 650px;">
+        <ul id="commentList" style=" height: 300px; background-color: white; overflow: hidden;overflow-y:scroll;">
+        @foreach($comments as $comment)
+          <li class="tabItem" id="{{$comment->commentId}}">{{$comment->comment}}</li>
+        @endforeach
+        </ul>
+        <button id="deleteComment" disabled>Delete Selected Comment</button>
+        <button id="addComment">Add New Comment</button>
+        <label for="comment">Comment / Taks Text:<input type="text" id="comment" name="comment"></label>
+      </div>
     </div>
+<script type="text/javascript">
+  /*
+  This is just a simple list listener function
+ */
+  function click() {
+      del.disabled = false;
+      for (var i = tabItemClass.length - 1; i >= 0; i--) {
+        tabItemClass[i].style.background = 'white';
+      }
+      this.style.background = 'red';
+      selected = this;
+  }
+
+  function hover() {
+    if(this !== selected) {
+      this.style.background = 'lightblue';
+    }
+  }
+
+  function exitHover() {
+    if(this !== selected) {
+      this.style.background = 'white';
+    }
+  }
+
+  var tabItemClass = document.getElementsByClassName('tabItem');
+  var selected;
+
+  for (var i = tabItemClass.length - 1; i >= 0; i--) {
+    tabItemClass[i].addEventListener('click', click);
+    tabItemClass[i].addEventListener('mouseenter', hover);
+    tabItemClass[i].addEventListener('mouseleave', exitHover);
+  }
+
+  /*
+  This is for the add and delete buttons
+  we will be sending the data as a json post request
+   */
+  function sendAjaxRequest(type, url, params) {
+    http.open(type, url, true);
+
+    http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    http.onreadystatechange = function () {
+      if(http.readyState == 4 && http.status == 200) {
+        alert(http.responseText);
+      }
+    }
+    http.send(params);
+  }
+
+  var http = new XMLHttpRequest();
+
+
+  // Delete
+  var del = document.getElementById('deleteComment');
+  del.addEventListener('click', function() {
+    var params = {'_method':'delete',
+                  '_token' :$('meta[name=csrf-token]').attr('content'),
+                  'id'   :selected.id,
+                  'projectId':{{$project['projectId']}} };
+    sendAjaxRequest('POST', '/comment/delete', JSON.stringify(params));
+    selected.remove();
+    del.disabled = true;
+  });
+
+  // Add
+  var add = document.getElementById('addComment');
+  add.addEventListener('click', function() {
+    var params = {'_token' :$('meta[name=csrf-token]').attr('content'),
+                  'text'   :document.getElementById('comment').value,
+                  'projectId':{{$project['projectId']}} };
+    sendAjaxRequest('POST', '/comment/add', JSON.stringify(params));
+    var list = document.getElementById('commentList');
+    var entry = document.createElement('li');
+    entry.appendChild(document.createTextNode(params.text));
+    list.appendChild(entry);
+  });
+</script>
+
 
     <div id="Contacts" class="w3-container w3-border tab" style="display:none">
         <form>
           <div class="pull-left" style="width: 150px; background-color: red;">Related Contacts:</div>
           <div class="pull-right" style="width: 650px;">
             <ul style=" height: 400px; background-color: white;">
-              <li >List of tasks and comments will go here</li>
+              <li class="tabItem">List of tasks and comments will go here</li>
             </ul>
             <input type="button" style="float: right;" value="Email Selected Contact" name="">
             <input type="button" value="View Details for Selected Contact" name="">
@@ -120,7 +200,7 @@
           <div class="pull-left" style="width: 150px; background-color: red;">Related File Attachments:</div>
           <div class="pull-right" style="width: 650px;">
             <ul style=" height: 400px; background-color: white;">
-              <li >List of tasks and comments will go here</li>
+              <li class="tabItem">List of tasks and comments will go here</li>
             </ul>
             <input type="button" name="" value="Open Selected File">
             <input type="button" name="" value="Remove File Attachment">
