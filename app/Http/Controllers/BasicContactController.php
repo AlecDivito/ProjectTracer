@@ -18,7 +18,32 @@ class BasicContactController extends Controller
 
     public function contact(Request $request, Contact $contact)
     {
-        return view('projectTracker.contact')->with('contact', $contact);
+        // Get all projects
+        $ids = $contact->getContactIds(Auth::id());
+        $values = [];
+        $values['count'] = count($ids) - 1; // 5
+        $values['first'] = $ids[0]; // 1
+        $values['last']  = $ids[$values['count']]; // 70
+        if ($ids[0] === $contact->contactId) {
+            $values['next'] = $ids[1];
+            $values['pervious'] = $ids[0];
+            $values['currentCount'] = 0;
+
+        } elseif ($ids[$values['count']] === $contact->contactId) {
+            $values['next'] = $ids[$values['count']];
+            $values['pervious'] = $ids[$values['count'] - 1];
+            $values['currentCount'] = $values['count'];
+        } else {
+            for ($i=1; $i < $values['count']; $i++) {
+                if ($contact->contactId === $ids[$i]) {
+                    $values['next'] = $ids[$i + 1];
+                    $values['pervious'] = $ids[$i - 1];
+                    $values['currentCount'] = $i;
+                    break;
+                }
+            }
+        }
+        return view('projectTracker.contact',['contact'=>$contact, 'values'=>$values]);
     }
 
     public function saveContact(Request $request, Contact $contact)
