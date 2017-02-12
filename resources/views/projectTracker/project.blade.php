@@ -21,13 +21,10 @@
       then change the _method to the approprite function
     -->
       <div class="pull-left">
-        <form method="post" action="idkyet">
-          {{ csrf_field() }}
-          <input type="submit" name="moveFirst" value="<|"><!-- POST -->
-          <input type="submit" name="movePrevious" value="<"><!-- POST -->
-          <input type="submit" name="moveNext" value=">"><!-- POST -->
-          <input type="submit" name="moveLast" value="|>"><!-- POST -->
-        </form>
+        <a href="{{$values['first']}}"><button class="btn"><|</button></a>
+        <a href="{{$values['pervious']}}"><button class="btn"><</button></a>
+        <a href="{{$values['next']}}"><button class="btn">></button></a>
+        <a href="{{$values['last']}}"><button class="btn">|></button></a>
       </div>
 
       <div class="pull-right">
@@ -45,7 +42,7 @@
             <input type="submit" name="delete" id="delete" value="Delete"><!-- DELETE -->
           </div>
           <div class="clearfix"></div>
-          <p>Record # of #</p>
+          <p>Record {{$values['currentCount']}} of {{$values['count']}}</p>
           <div class="inputs">
             <ul class="pull-left">
               <li>Project ID: {{ $project['projectId']}}</li>
