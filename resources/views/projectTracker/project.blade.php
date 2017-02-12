@@ -87,9 +87,9 @@
     <div id="Comments" class="w3-container w3-border tab" style="display:block">
       <div class="pull-left" style="width: 150px; background-color: red;">Comments / Tasks:</div>
       <div class="pull-right" style="width: 650px;">
-        <ul style=" height: 300px; background-color: white; overflow: hidden;overflow-y:scroll;">
+        <ul id="commentList" style=" height: 300px; background-color: white; overflow: hidden;overflow-y:scroll;">
         @foreach($comments as $comment)
-          <li class="tabItem">{{$comment}}</li>
+          <li class="tabItem" id="{{$comment->commentId}}">{{$comment->comment}}</li>
         @endforeach
         </ul>
         <button id="deleteComment" disabled>Delete Selected Comment</button>
@@ -158,6 +158,8 @@
                   'id'   :selected.id,
                   'projectId':{{$project['projectId']}} };
     sendAjaxRequest('POST', '/comment/delete', JSON.stringify(params));
+    selected.remove();
+    del.disabled = true;
   });
 
   // Add
@@ -167,6 +169,10 @@
                   'text'   :document.getElementById('comment').value,
                   'projectId':{{$project['projectId']}} };
     sendAjaxRequest('POST', '/comment/add', JSON.stringify(params));
+    var list = document.getElementById('commentList');
+    var entry = document.createElement('li');
+    entry.appendChild(document.createTextNode(params.text));
+    list.appendChild(entry);
   });
 </script>
 

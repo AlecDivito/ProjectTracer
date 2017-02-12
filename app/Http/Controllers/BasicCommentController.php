@@ -20,6 +20,8 @@ class BasicCommentController extends Controller
 
   public function delete(Request $request)
   {
+    $comment = Comment::where('commentId', '=', $request['id'])->firstOrFail();
+    $comment->delete();
     return 'successfully removed a comment';
   }
 

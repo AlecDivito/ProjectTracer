@@ -24,7 +24,6 @@ class Comment extends Model
     public function getAllComments($projectId)
     {
         return DB::table('ProjectComments')
-                    ->where('projectId', $projectId)
-                    ->pluck('comment');
+                    ->where('projectId', $projectId)->get();
     }
 }
