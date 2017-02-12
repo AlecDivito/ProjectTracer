@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,11 @@ class BasicProjectController extends Controller
                 }
             }
         }
-        return view('projectTracker.project', ['project'=>$project, 'values'=>$values]);
+        $comment = new Comment();
+        $comments = $comment->getAllComments($project->projectId);
+        return view('projectTracker.project', ['project'=>$project,
+                                               'values'=>$values,
+                                               'comments'=>$comments]);
     }
 
     public function saveProject(Request $request, Project $project)
