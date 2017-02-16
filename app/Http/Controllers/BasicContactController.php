@@ -3,20 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Contact;
+use App\Project;
+use App\ProjectContacts;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class BasicContactController extends Controller
 {
-    public function newContact(Request $request)
+    public function newContact(Request $request, Project $project)
     {
         $contact = new Contact();
         $contact->userId = Auth::id();
         $contact->save();
-        return redirect("/contact/{$contact->contactId}");
+        return redirect("/project/{$project->projectId}/contact/{$contact->contactId}");
     }
 
-    public function contact(Request $request, Contact $contact)
+    public function getContact(Request $request, Project $project, Contact $contact)
     {
         // Get all projects
         $ids = $contact->getContactIds(Auth::id());
@@ -43,10 +45,10 @@ class BasicContactController extends Controller
                 }
             }
         }
-        return view('projectTracker.contact',['contact'=>$contact, 'values'=>$values]);
+        return view('projectTracker.contact',['contact'=>$contact, 'project'=>$project, 'values'=>$values]);
     }
 
-    public function saveContact(Request $request, Contact $contact)
+    public function saveContact(Request $request, Project $project, Contact $contact)
     {
         $contact->lastName   = isset($request['lastName'])   ? $request['lastName'] : null;
         $contact->firstName  = isset($request['firstName'])  ? $request['firstName'] : null;
@@ -62,12 +64,21 @@ class BasicContactController extends Controller
         $contact->cellPhone  = isset($request['cellPhone'])  ? $request['cellPhone'] : null;
         $contact->email      = isset($request['email'])      ? $request['email'] : null;
         $contact->save();
-        return redirect("/contact/{$contact->contactId}");
+        return redirect("/project/{$project->projectId}/contact/{$contact->contactId}");
     }
 
-    public function deleteContact(Request $request, Contact $contact)
+    public function addContact(Request $request, Project $project, Contact $contact)
+    {
+        $linker = new ProjectContacts();
+        $linker->projectId = $project->projectId;
+        $linker->contactId = $contact->contactId;
+        $linker->save();
+    }
+
+    public function deleteContact(Request $request, Project $project, Contact $contact)
     {
         $contact->delete();
-        return redirect('/home');
+        $contact = Contact::where('projectId','=',$project->projectId)->first();
+        return redirect("/project/{$project->projectId}/contact/{$contact->contactId}");
     }
 }

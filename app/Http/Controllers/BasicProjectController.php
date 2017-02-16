@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Project;
 use App\Comment;
 use App\Contact;
+use App\ProjectContacts;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -73,30 +74,4 @@ class BasicProjectController extends Controller
         $project->delete();
         return redirect('/home');
     }
-
-    public function newContact(Request $request, Project $project)
-    {
-        return view("projectTracker.contact");
-    }
-
-    public function createAndAddContact(Request $request, Project $project)
-    {
-        $contact = new Contact();
-        $contact->lastName   = isset($request['lastName'])   ? $request['lastName'] : null;
-        $contact->firstName  = isset($request['firstName'])  ? $request['firstName'] : null;
-        $contact->middleName = isset($request['middleName']) ? $request['middleName'] : null;
-        $contact->company    = isset($request['company'])    ? $request['company'] : null;
-        $contact->address1   = isset($request['address1'])   ? $request['address1'] : null;
-        $contact->address2   = isset($request['address2'])   ? $request['address2'] : null;
-        $contact->city       = isset($request['city'])       ? $request['city'] : null;
-        $contact->region     = isset($request['region'])     ? $request['region'] : null;
-        $contact->postalCode = isset($request['postalCode']) ? $request['postalCode'] : null;
-        $contact->workPhone  = isset($request['workPhone'])  ? $request['workPhone'] : null;
-        $contact->homePhone  = isset($request['homePhone'])  ? $request['homePhone'] : null;
-        $contact->cellPhone  = isset($request['cellPhone'])  ? $request['cellPhone'] : null;
-        $contact->email      = isset($request['email'])      ? $request['email'] : null;
-        $contact->save();
-
-    }
-
 }

@@ -19,13 +19,12 @@ Route::post('/project/new', 'BasicProjectController@newProject');
 Route::get('/project/{project}', 'BasicProjectController@project');
 Route::post('/project/{project}', 'BasicProjectController@saveProject');
 Route::delete('/project/{project}', 'BasicProjectController@deleteProject');
-Route::get('/project/{project}/contact', 'BasicProjectController@newContact');
-Route::post('/project/{project}/contact', 'BasicProjectController@createAndAddContact');
 
-Route::post('/contact/new', 'BasicContactController@newContact');
-Route::get('/contact/{contact}', 'BasicContactController@contact');
-Route::post('/contact/{contact}', 'BasicContactController@saveContact');
-Route::delete('/contact/{contact}', 'BasicContactController@deleteContact');
+Route::get('/project/{project}/contact', 'BasicContactController@newContact');
+Route::get('/project/{project}/contact/{contact}', 'BasicContactController@getContact');
+Route::post('/project/{project}/contact/{contact}', 'BasicContactController@saveContact');
+Route::post('/project/{project}/{contact}', 'BasicContactController@addContact')
+Route::delete('/project/{project}/contact/{contact}', 'BasicContactController@deleteContact');
 
 Route::post('/comment/add', 'BasicCommentController@add');
 Route::delete('/comment/delete', 'BasicCommentController@delete');
