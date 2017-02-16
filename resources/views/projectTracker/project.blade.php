@@ -97,121 +97,149 @@
         <label for="comment">Comment / Taks Text:<input type="text" id="comment" name="comment"></label>
       </div>
     </div>
-<script type="text/javascript">
-  /*
-  This is just a simple list listener function
- */
-  function click() {
-      del.disabled = false;
-      for (var i = tabItemClass.length - 1; i >= 0; i--) {
-        tabItemClass[i].style.background = 'white';
-      }
-      this.style.background = 'red';
-      selected = this;
-  }
-
-  function hover() {
-    if(this !== selected) {
-      this.style.background = 'lightblue';
-    }
-  }
-
-  function exitHover() {
-    if(this !== selected) {
-      this.style.background = 'white';
-    }
-  }
-
-  var tabItemClass = document.getElementsByClassName('tabItem');
-  var selected;
-
-  for (var i = tabItemClass.length - 1; i >= 0; i--) {
-    tabItemClass[i].addEventListener('click', click);
-    tabItemClass[i].addEventListener('mouseenter', hover);
-    tabItemClass[i].addEventListener('mouseleave', exitHover);
-  }
-
-  /*
-  This is for the add and delete buttons
-  we will be sending the data as a json post request
+  <script type="text/javascript">
+    /*
+    This is just a simple list listener function
    */
-  function sendAjaxRequest(type, url, params) {
-    http.open(type, url, true);
+    function click() {
+        del.disabled = false;
+        for (var i = tabItemClass.length - 1; i >= 0; i--) {
+          tabItemClass[i].style.background = 'white';
+        }
+        this.style.background = 'red';
+        selected = this;
+    }
 
-    http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-    http.onreadystatechange = function () {
-      if(http.readyState == 4 && http.status == 200) {
-        alert(http.responseText);
+    function hover() {
+      if(this !== selected) {
+        this.style.background = 'lightblue';
       }
     }
-    http.send(params);
-  }
 
-  var http = new XMLHttpRequest();
+    function exitHover() {
+      if(this !== selected) {
+        this.style.background = 'white';
+      }
+    }
+
+    var tabItemClass = document.getElementsByClassName('tabItem');
+    var selected;
+
+    for (var i = tabItemClass.length - 1; i >= 0; i--) {
+      tabItemClass[i].addEventListener('click', click);
+      tabItemClass[i].addEventListener('mouseenter', hover);
+      tabItemClass[i].addEventListener('mouseleave', exitHover);
+    }
+
+    /*
+    This is for the add and delete buttons
+    we will be sending the data as a json post request
+     */
+    function sendAjaxRequest(type, header='application/json;', url, params) {
+      http.open(type, url, true);
+
+      http.setRequestHeader('Content-type', header);
+      http.onreadystatechange = function () {
+        if(http.readyState == 4 && http.status == 200) {
+          alert(http.responseText);
+        }
+      }
+      http.send(params);
+    }
+
+    var http = new XMLHttpRequest();
+
+    // Delete
+    var del = document.getElementById('deleteComment');
+    del.addEventListener('click', function() {
+      var params = {'_method':'delete',
+                    '_token' :$('meta[name=csrf-token]').attr('content'),
+                    'id'   :selected.id,
+                    'projectId':{{$project['projectId']}} };
+      sendAjaxRequest('POST', 'application/json; charset=utf-8', '/comment/delete', JSON.stringify(params));
+      selected.remove();
+      del.disabled = true;
+    });
+
+    // Add
+    var add = document.getElementById('addComment');
+    add.addEventListener('click', function() {
+      var params = {'_token' :$('meta[name=csrf-token]').attr('content'),
+                    'text'   :document.getElementById('comment').value,
+                    'projectId':{{$project['projectId']}} };
+      sendAjaxRequest('POST', 'application/json; charset=utf-8','/comment/add', JSON.stringify(params));
+      var list = document.getElementById('commentList');
+      var entry = document.createElement('li');
+      entry.appendChild(document.createTextNode(params.text));
+      list.appendChild(entry);
+    });
+  </script>
 
 
-  // Delete
-  var del = document.getElementById('deleteComment');
-  del.addEventListener('click', function() {
-    var params = {'_method':'delete',
-                  '_token' :$('meta[name=csrf-token]').attr('content'),
-                  'id'   :selected.id,
-                  'projectId':{{$project['projectId']}} };
-    sendAjaxRequest('POST', '/comment/delete', JSON.stringify(params));
-    selected.remove();
-    del.disabled = true;
-  });
+  <div id="Contacts" class="w3-container w3-border tab" style="display:none">
+      <div class="pull-left" style="width: 150px; background-color: red;">Related Contacts:</div>
+      <div class="pull-right" style="width: 650px;">
+        <ul style=" height: 400px; background-color: white;">
+          <li class="tabItem">List of tasks and comments will go here</li>
+        </ul>
+        <a href="/project/{{$project->projectId}}/contact"><button>Add / Manage Contacts</button></a>
+        <input type="button" style="float: right;" value="Email Selected Contact" name="">
+        <input type="button" value="View Details for Selected Contact" name="">
+        <input type="button" value="Delete Selected Contact" name="">
+      </div>
+  </div>
 
-  // Add
-  var add = document.getElementById('addComment');
-  add.addEventListener('click', function() {
-    var params = {'_token' :$('meta[name=csrf-token]').attr('content'),
-                  'text'   :document.getElementById('comment').value,
-                  'projectId':{{$project['projectId']}} };
-    sendAjaxRequest('POST', '/comment/add', JSON.stringify(params));
-    var list = document.getElementById('commentList');
-    var entry = document.createElement('li');
-    entry.appendChild(document.createTextNode(params.text));
-    list.appendChild(entry);
-  });
-</script>
-
-
-    <div id="Contacts" class="w3-container w3-border tab" style="display:none">
-        <form>
-          <div class="pull-left" style="width: 150px; background-color: red;">Related Contacts:</div>
-          <div class="pull-right" style="width: 650px;">
-            <ul style=" height: 400px; background-color: white;">
-              <li class="tabItem">List of tasks and comments will go here</li>
-            </ul>
-            <input type="button" style="float: right;" value="Email Selected Contact" name="">
-            <input type="button" value="View Details for Selected Contact" name="">
-            <input type="button" value="Delete Selected Contact" name="">
-          </div>
-        </form>
-        <form action="/contact/new" method="post">
-          {{csrf_field()}}
-          <input type="submit" value="Add / Manage Contacts" name="">
-        </form>
-    </div>
-
-    <div id="Files" class="w3-container w3-border tab" style="display:none">
-        <form>
-          <div class="pull-left" style="width: 150px; background-color: red;">Related File Attachments:</div>
-          <div class="pull-right" style="width: 650px;">
-            <ul style=" height: 400px; background-color: white;">
-              <li class="tabItem">List of tasks and comments will go here</li>
-            </ul>
-            <input type="button" name="" value="Open Selected File">
-            <input type="button" name="" value="Remove File Attachment">
-            <input type="button" name="" value="Add File Attachment">
-            <label for="57">File Description:<input type="text" name="" value=""></label>
-            <label for="62">File Name:<input type="text" name="" value=""></label>
-            <input type="button" value="File Browse">
-          </div>
-        </form>
+  <div id="Files" class="w3-container w3-border tab" style="display:none">
+    <div class="pull-left" style="width: 150px; background-color: red;">Related File Attachments:</div>
+    <div class="pull-right" style="width: 650px;">
+      <ul style=" height: 300px; background-color: white; overflow: hidden;overflow-y:scroll;">
+        <li class="tabItem">List of tasks and comments will go here</li>
+      </ul>
+      <button>Open Selected File</button>
+      <button id="deleteFile">Remove File Attachment</button>
+      <form id="ajax-upload" action="/file/add" enctype="multipart/form-data" method="POST">
+        {{csrf_field()}}
+        <label for="fileDescription">File Description:<input type="text" id="fileDescription" name="fileDescription" value=""></label>
+        <label for="fileName">File Name:<input type="text" id="fileName" name="fileName" value=""></label>
+        <input type="file" id="selectedFile" value="Add File Attachment">
+        <button type="submit">Add File Attachment</button>
+      </form>
     </div>
   </div>
+  <script type="text/javascript">
+    // Delete
+    var delFile = document.getElementById('deleteFile');
+    delFile.addEventListener('click', function() {});
+
+    // Add
+    document.getElementById('ajax-upload').addEventListener("submit", function(e){
+      e.preventDefault();
+      var form = e.target;
+      var data = new FormData(form);
+
+      var request = new XMLHttpRequest();
+      request.open(form.method, form.action, true);
+      request.setRequestHeader('Content-type', 'multipart/form-data');
+
+      request.onreadystatechange = function(){
+        if(http.readyState == 4 && http.status == 200) {
+          alert(http.responseText);
+        }
+      }
+
+      request.send(data);
+    })
+    /*
+    // Check file on change
+    $('#selectedFile').on('change', function () {
+      var file = this.files[0];
+      if(file.size > 1024)
+      {
+        alert('max upload size is 1K');
+      }
+    });*/
+  </script>
+
 
   <div class="pull-right">
     <input type="button" name="showUnclosed" value="Show Unclosed">

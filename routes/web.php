@@ -23,7 +23,7 @@ Route::delete('/project/{project}', 'BasicProjectController@deleteProject');
 Route::get('/project/{project}/contact', 'BasicContactController@newContact');
 Route::get('/project/{project}/contact/{contact}', 'BasicContactController@getContact');
 Route::post('/project/{project}/contact/{contact}', 'BasicContactController@saveContact');
-Route::post('/project/{project}/{contact}', 'BasicContactController@addContact')
+Route::patch('/project/{project}/contact/{contact}', 'BasicContactController@addContact');
 Route::delete('/project/{project}/contact/{contact}', 'BasicContactController@deleteContact');
 
 Route::post('/comment/add', 'BasicCommentController@add');

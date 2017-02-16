@@ -45,6 +45,7 @@ class BasicContactController extends Controller
                 }
             }
         }
+        $values['url'] = "/project/{$project->projectId}/contact/";
         return view('projectTracker.contact',['contact'=>$contact, 'project'=>$project, 'values'=>$values]);
     }
 
@@ -73,6 +74,7 @@ class BasicContactController extends Controller
         $linker->projectId = $project->projectId;
         $linker->contactId = $contact->contactId;
         $linker->save();
+        return "success";
     }
 
     public function deleteContact(Request $request, Project $project, Contact $contact)
