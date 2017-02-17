@@ -23,12 +23,12 @@ class Project extends Model
 
     public function comments()
     {
-        $this->hasMany('App\Comment');
+        return $this->hasMany('App\Comment', 'projectId');
     }
 
     public function files()
     {
-        $this->hasMany('App\File');
+        return $this->hasMany('App\File', 'projectId');
     }
 
     public function getProjectIds($userId)
