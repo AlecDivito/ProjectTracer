@@ -25,6 +25,7 @@ Route::get('/project/{project}/contact/{contact}', 'BasicContactController@getCo
 Route::post('/project/{project}/contact/{contact}', 'BasicContactController@saveContact');
 Route::patch('/project/{project}/contact/{contact}', 'BasicContactController@addContact');
 Route::delete('/project/{project}/contact/{contact}', 'BasicContactController@deleteContact');
+Route::delete('/project/{project}/contact', 'BasicContactController@RemoveContactFromProject');
 
 Route::post('/comment/add', 'BasicCommentController@add');
 Route::delete('/comment/delete', 'BasicCommentController@delete');

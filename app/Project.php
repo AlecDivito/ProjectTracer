@@ -18,7 +18,7 @@ class Project extends Model
 
     public function contacts()
     {
-        return $this->belongsToMany('App\Contact' , 'ProjectContacts');
+        return $this->belongsToMany('App\Contact' , 'ProjectContacts', 'projectId','contactId');
     }
 
     public function comments()
