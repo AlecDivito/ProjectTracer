@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use App\Comment;
+use App\Contact;
+use App\ProjectContacts;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -44,11 +46,14 @@ class BasicProjectController extends Controller
                 }
             }
         }
-        $comment = new Comment();
-        $comments = $comment->getAllComments($project->projectId);
+        $comments = $project->comments;
+        $contacts = $project->contacts;
+        $files = $project->files;
         return view('projectTracker.project', ['project'=>$project,
                                                'values'=>$values,
-                                               'comments'=>$comments]);
+                                               'comments'=>$comments,
+                                               'contacts'=>$contacts,
+                                               'files'=>$files]);
     }
 
     public function saveProject(Request $request, Project $project)
@@ -69,8 +74,8 @@ class BasicProjectController extends Controller
 
     public function deleteProject(Request $request, Project $project)
     {
+        ProjectContacts::where('projectId', $project->projectId)->delete();
         $project->delete();
         return redirect('/home');
     }
-
 }

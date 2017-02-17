@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -21,9 +20,4 @@ class Comment extends Model
       return $this->belongsTo('App\Project');
     }
 
-    public function getAllComments($projectId)
-    {
-        return DB::table('ProjectComments')
-                    ->where('projectId', $projectId)->get();
-    }
 }
