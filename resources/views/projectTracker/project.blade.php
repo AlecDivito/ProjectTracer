@@ -83,28 +83,29 @@
       <li><a href="javascript:void(0)" class="tablink" onclick="openTab(event, 'Contacts')">Contacts</a></li>
       <li><a href="javascript:void(0)" class="tablink" onclick="openTab(event, 'Files')">File Attachments</a></li>
     </ul>
+  </div>
 
-    <div id="Comments" class="w3-container w3-border tab" style="display:block">
+  <div id="Comments" class="w3-container w3-border tab" style="display:block">
       <div class="pull-left" style="width: 150px; background-color: red;">Comments / Tasks:</div>
       <div class="pull-right" style="width: 650px;">
         <ul id="commentList" style=" height: 300px; background-color: white; overflow: hidden;overflow-y:scroll;">
         @foreach($comments as $comment)
-          <li class="tabItem" id="{{$comment->commentId}}">{{$comment->comment}}</li>
+          <li class="commentItem" id="{{$comment->commentId}}">{{$comment->comment}}</li>
         @endforeach
         </ul>
         <button id="deleteComment" disabled>Delete Selected Comment</button>
         <button id="addComment">Add New Comment</button>
         <label for="comment">Comment / Taks Text:<input type="text" id="comment" name="comment"></label>
       </div>
-    </div>
+  </div>
   <script type="text/javascript">
     /*
     This is just a simple list listener function
    */
     function click() {
         del.disabled = false;
-        for (var i = tabItemClass.length - 1; i >= 0; i--) {
-          tabItemClass[i].style.background = 'white';
+        for (var i = commentItemClass.length - 1; i >= 0; i--) {
+          commentItemClass[i].style.background = 'white';
         }
         this.style.background = 'red';
         selected = this;
@@ -122,13 +123,13 @@
       }
     }
 
-    var tabItemClass = document.getElementsByClassName('tabItem');
+    var commentItemClass = document.getElementsByClassName('commentItem');
     var selected;
 
-    for (var i = tabItemClass.length - 1; i >= 0; i--) {
-      tabItemClass[i].addEventListener('click', click);
-      tabItemClass[i].addEventListener('mouseenter', hover);
-      tabItemClass[i].addEventListener('mouseleave', exitHover);
+    for (var i = commentItemClass.length - 1; i >= 0; i--) {
+      commentItemClass[i].addEventListener('click', click);
+      commentItemClass[i].addEventListener('mouseenter', hover);
+      commentItemClass[i].addEventListener('mouseleave', exitHover);
     }
 
     /*
@@ -179,15 +180,73 @@
   <div id="Contacts" class="w3-container w3-border tab" style="display:none">
       <div class="pull-left" style="width: 150px; background-color: red;">Related Contacts:</div>
       <div class="pull-right" style="width: 650px;">
-        <ul style=" height: 400px; background-color: white;">
-          <li class="tabItem">List of tasks and comments will go here</li>
+      <ul id="contactList" style=" height: 300px; background-color: white; overflow: hidden;overflow-y:scroll;">
+        @foreach($contacts as $contact)
+          <li class="contactItem" id="{{$contact->contactId}}">
+            {{$contact->firstName}} {{$contact->middleName or ''}} {{$contact->lastName}}
+          </li>
+        @endforeach
         </ul>
         <a href="/project/{{$project->projectId}}/contact"><button>Add / Manage Contacts</button></a>
-        <input type="button" style="float: right;" value="Email Selected Contact" name="">
-        <input type="button" value="View Details for Selected Contact" name="">
-        <input type="button" value="Delete Selected Contact" name="">
+        <input type="button" style="float: right;" value="Email Selected Contact" disabled>
+        <button id="viewContact" disabled>View Details for Selected Contact</button>
+        <button id="delContact" disabled>Delete Selected Contact</button>
       </div>
   </div>
+  <script type="text/javascript">
+    /*
+    This is just a simple list listener function
+   */
+    function contactClick() {
+        delContact.disabled = false;
+        viewContact.disabled = false;
+        for (var i = contactItemClass.length - 1; i >= 0; i--) {
+          contactItemClass[i].style.background = 'white';
+        }
+        this.style.background = 'red';
+        selected = this;
+    }
+
+    function contactHover() {
+      if(this !== selected) {
+        this.style.background = 'lightblue';
+      }
+    }
+
+    function contactExitHover() {
+      if(this !== selected) {
+        this.style.background = 'white';
+      }
+    }
+
+    var contactItemClass = document.getElementsByClassName('contactItem');
+    var selected;
+
+    for (var i = contactItemClass.length - 1; i >= 0; i--) {
+      contactItemClass[i].addEventListener('click', contactClick);
+      contactItemClass[i].addEventListener('mouseenter', contactHover);
+      contactItemClass[i].addEventListener('mouseleave', contactExitHover);
+    }
+
+    // Delete
+    var delContact = document.getElementById('delContact');
+    delContact.addEventListener('click', function() {
+      var params = {'_method':'delete',
+                    '_token' :$('meta[name=csrf-token]').attr('content'),
+                    'contactId':selected.id };
+      sendAjaxRequest('POST', 'application/json; charset=utf-8',
+        '/project/{{$project->projectId}}/contact', JSON.stringify(params));
+      selected.remove();
+      delContact.disabled = true;
+      viewContact.disabled = true;
+    });
+
+    var viewContact = document.getElementById('viewContact');
+    viewContact.addEventListener('click', function(){
+      window.location.href = '/project/{{$project->projectId}}/contact/' + selected.id;
+      return false;
+    });
+  </script>
 
   <div id="Files" class="w3-container w3-border tab" style="display:none">
     <div class="pull-left" style="width: 150px; background-color: red;">Related File Attachments:</div>
@@ -245,7 +304,7 @@
     <input type="button" name="showUnclosed" value="Show Unclosed">
     <input type="button" name="showAll" value="Show All">
   </div>
-
+</div>
 
 <script>
   // handles event when the tab buttons are pressed

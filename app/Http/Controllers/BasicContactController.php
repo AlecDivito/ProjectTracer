@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contact;
 use App\Project;
 use App\ProjectContacts;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -74,13 +75,26 @@ class BasicContactController extends Controller
         $linker->projectId = $project->projectId;
         $linker->contactId = $contact->contactId;
         $linker->save();
-        return "success";
+        return "success!\n REMEBER TO SAVE CHANGES!!\nCAUSE THIS DOESN'T DO THAT!!";
     }
 
     public function deleteContact(Request $request, Project $project, Contact $contact)
     {
+        ProjectContacts::where('projectId','=',$project->projectId)
+                        ->where('contactId','=',$contact->contactId)
+                        ->delete();
         $contact->delete();
         $contact = Contact::where('projectId','=',$project->projectId)->first();
         return redirect("/project/{$project->projectId}/contact/{$contact->contactId}");
+    }
+
+    public function RemoveContactFromProject(Request $request, Project $project)
+    {
+        $link = ProjectContacts::where('projectId', $project->projectId) ->where('contactId', $request['contactId']) ->first();
+        if($link->delete()) {
+            return "Successfully removed contact from project";
+        } else {
+            return "Failed to remove contact from project";
+        }
     }
 }

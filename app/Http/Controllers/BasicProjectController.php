@@ -48,9 +48,11 @@ class BasicProjectController extends Controller
         }
         $comment = new Comment();
         $comments = $comment->getAllComments($project->projectId);
+        $contacts = $project->contacts;
         return view('projectTracker.project', ['project'=>$project,
                                                'values'=>$values,
-                                               'comments'=>$comments]);
+                                               'comments'=>$comments,
+                                               'contacts'=>$contacts]);
     }
 
     public function saveProject(Request $request, Project $project)
@@ -71,6 +73,7 @@ class BasicProjectController extends Controller
 
     public function deleteProject(Request $request, Project $project)
     {
+        ProjectContacts::where('projectId', $project->projectId)->delete();
         $project->delete();
         return redirect('/home');
     }
