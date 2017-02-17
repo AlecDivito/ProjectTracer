@@ -5,6 +5,10 @@
   <title>Title</title>
   <link rel="stylesheet" href="../css/app.css">
   <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <script
+        src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+        integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
+        crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -204,23 +208,23 @@
           contactItemClass[i].style.background = 'white';
         }
         this.style.background = 'red';
-        selected = this;
+        contactSelect = this;
     }
 
     function contactHover() {
-      if(this !== selected) {
+      if(this !== contactSelect) {
         this.style.background = 'lightblue';
       }
     }
 
     function contactExitHover() {
-      if(this !== selected) {
+      if(this !== contactSelect) {
         this.style.background = 'white';
       }
     }
 
     var contactItemClass = document.getElementsByClassName('contactItem');
-    var selected;
+    var contactSelect;
 
     for (var i = contactItemClass.length - 1; i >= 0; i--) {
       contactItemClass[i].addEventListener('click', contactClick);
@@ -233,17 +237,17 @@
     delContact.addEventListener('click', function() {
       var params = {'_method':'delete',
                     '_token' :$('meta[name=csrf-token]').attr('content'),
-                    'contactId':selected.id };
+                    'contactId':contactSelect.id };
       sendAjaxRequest('POST', 'application/json; charset=utf-8',
         '/project/{{$project->projectId}}/contact', JSON.stringify(params));
-      selected.remove();
+      contactSelect.remove();
       delContact.disabled = true;
       viewContact.disabled = true;
     });
 
     var viewContact = document.getElementById('viewContact');
     viewContact.addEventListener('click', function(){
-      window.location.href = '/project/{{$project->projectId}}/contact/' + selected.id;
+      window.location.href = '/project/{{$project->projectId}}/contact/' + contactSelect.id;
       return false;
     });
   </script>
@@ -251,52 +255,104 @@
   <div id="Files" class="w3-container w3-border tab" style="display:none">
     <div class="pull-left" style="width: 150px; background-color: red;">Related File Attachments:</div>
     <div class="pull-right" style="width: 650px;">
-      <ul style=" height: 300px; background-color: white; overflow: hidden;overflow-y:scroll;">
-        <li class="tabItem">List of tasks and comments will go here</li>
+      <ul id="fileList" style=" height: 300px; background-color: white; overflow: hidden;overflow-y:scroll;">
+        @foreach($files as $file)
+          <li class="filesItem" id="{{$file->fileId}}">
+            {{$file->fileName}} | {{$file->fileDescription}}
+          </li>
+        @endforeach
       </ul>
-      <button>Open Selected File</button>
-      <button id="deleteFile">Remove File Attachment</button>
-      <form id="ajax-upload" action="/file/add" enctype="multipart/form-data" method="POST">
+      <button id="downloadFile" disabled>Download Selected File</button>
+      <button id="deleteFile" disabled>Remove File Attachment From Project</button>
+      <form id="ajax-upload" enctype="multipart/form-data" method="post">
         {{csrf_field()}}
-        <label for="fileDescription">File Description:<input type="text" id="fileDescription" name="fileDescription" value=""></label>
-        <label for="fileName">File Name:<input type="text" id="fileName" name="fileName" value=""></label>
-        <input type="file" id="selectedFile" value="Add File Attachment">
-        <button type="submit">Add File Attachment</button>
+        <input type="hidden" name="projectId" value="{{$project->projectId}}">
+        <label for="fileDescription">File Description:<input type="text" id="fileDescription" name="fileDescription" required></label>
+        <label for="fileName">File Name:<input type="text" id="fileName" name="fileName" required></label>
+        <input type="file" id="selectedFile" value="Add File Attachment" name="file" required>
+        <button>Add File Attachment</button>
       </form>
     </div>
+    <iframe id="my_iframe" style="display:none;"></iframe>
   </div>
   <script type="text/javascript">
+    /*
+    This is just a simple list listener function
+   */
+    function fileClick() {
+        delFile.disabled = false;
+        downloadFile.disabled = false;
+        for (var i = fileItemClass.length - 1; i >= 0; i--) {
+          fileItemClass[i].style.background = 'white';
+        }
+        this.style.background = 'red';
+        fileSelect = this;
+    }
+
+    function fileHover() {
+      if(this !== fileSelect) {
+        this.style.background = 'lightblue';
+      }
+    }
+
+    function fileExitHover() {
+      if(this !== fileSelect) {
+        this.style.background = 'white';
+      }
+    }
+
+    var fileItemClass = document.getElementsByClassName('filesItem');
+    var fileSelect;
+
+    for (var i = fileItemClass.length - 1; i >= 0; i--) {
+      fileItemClass[i].addEventListener('click', fileClick);
+      fileItemClass[i].addEventListener('mouseenter', fileHover);
+      fileItemClass[i].addEventListener('mouseleave', fileExitHover);
+    }
+
     // Delete
     var delFile = document.getElementById('deleteFile');
-    delFile.addEventListener('click', function() {});
+    delFile.addEventListener('click', function() {
+      var params = {'_method':'delete',
+                    '_token' :$('meta[name=csrf-token]').attr('content'),
+                    'fileId':fileSelect.id };
+      sendAjaxRequest('POST', 'application/json; charset=utf-8',
+        '/file/delete', JSON.stringify(params));
+      fileSelect.remove();
+      delFile.disabled = true;
+      downloadFile.disabled = true;
+    });
+
+    var downloadFile = document.getElementById('downloadFile');
+    downloadFile.addEventListener('click', function () {
+      window.open('/file/download?fileId='+fileSelect.id);
+    });
 
     // Add
-    document.getElementById('ajax-upload').addEventListener("submit", function(e){
-      e.preventDefault();
-      var form = e.target;
-      var data = new FormData(form);
+    $("#ajax-upload").submit(function(){
+      var list = document.getElementById('fileList');
+      var entry = document.createElement('li');
+      entry.appendChild(document.createTextNode(
+          document.getElementById('fileDescription').value + " | " +
+          document.getElementById('fileName').value
+      ));
+      list.appendChild(entry);
 
-      var request = new XMLHttpRequest();
-      request.open(form.method, form.action, true);
-      request.setRequestHeader('Content-type', 'multipart/form-data');
-
-      request.onreadystatechange = function(){
-        if(http.readyState == 4 && http.status == 200) {
-          alert(http.responseText);
-        }
-      }
-
-      request.send(data);
-    })
-    /*
-    // Check file on change
-    $('#selectedFile').on('change', function () {
-      var file = this.files[0];
-      if(file.size > 1024)
-      {
-        alert('max upload size is 1K');
-      }
-    });*/
+      var formData = new FormData($(this)[0]);
+      $.ajax({
+          url: '/file/add',
+          type: 'POST',
+          data: formData,
+          async: false,
+          success: function (data) {
+              alert(data)
+          },
+          cache: false,
+          contentType: false,
+          processData: false
+      });
+      return false;
+    });
   </script>
 
 
