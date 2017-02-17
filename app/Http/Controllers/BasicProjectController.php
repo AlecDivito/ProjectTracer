@@ -46,13 +46,14 @@ class BasicProjectController extends Controller
                 }
             }
         }
-        $comment = new Comment();
-        $comments = $comment->getAllComments($project->projectId);
+        $comments = $project->comments;
         $contacts = $project->contacts;
+        $files = $project->files;
         return view('projectTracker.project', ['project'=>$project,
                                                'values'=>$values,
                                                'comments'=>$comments,
-                                               'contacts'=>$contacts]);
+                                               'contacts'=>$contacts,
+                                               'files'=>$files]);
     }
 
     public function saveProject(Request $request, Project $project)
